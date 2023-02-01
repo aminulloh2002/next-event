@@ -19,6 +19,6 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "src/components/icons/date-icon.js", "src/components/icons/arrow-right-icon.js", "src/components/icons/arrow-right-icon.js", "src/components/icons/address-icon.js"],
   "exclude": ["node_modules"]
 }
