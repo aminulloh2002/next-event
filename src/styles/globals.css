@@ -27,3 +27,16 @@ ul {
   margin: auto;
   text-align: center;
 }
+
+.loading {
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+  align-items: center;
+  justify-content: center;
+}
+
+.loading>p {
+  font-size: 1.2rem;
+  font-weight: bold;
+}

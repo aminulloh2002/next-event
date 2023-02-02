@@ -1,10 +1,10 @@
 import EventList from "@/components/events/event-list";
 import EventsSearch from "@/components/events/events-search";
-import { getAllEvents } from "dummy-data";
+import { eventsType } from "@/types/firebaseTypes";
+import firebaseHelper from "helpers/api-util";
 import { useRouter } from "next/router";
 
-export default function EventsPage() {
-  const events = getAllEvents();
+export default function EventsPage(props: { events: eventsType }) {
   const router = useRouter();
 
   function findEventHandler(year: string, month: string) {
@@ -15,7 +15,18 @@ export default function EventsPage() {
   return (
     <div>
       <EventsSearch onSearch={findEventHandler} />
-      <EventList items={events} />
+      <EventList items={props.events} />
     </div>
   );
+}
+
+export async function getStaticProps() {
+  const { getAllEvents } = await firebaseHelper();
+
+  return {
+    props: {
+      events: getAllEvents(),
+    },
+    revalidate: 60,
+  };
 }

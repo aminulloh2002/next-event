@@ -1,26 +1,17 @@
 import EventContent from "@/components/event-detail/event-content";
 import EventLogistics from "@/components/event-detail/event-logistics";
 import EventSummary from "@/components/event-detail/event-summary";
-import ErrorAlert from "@/components/ui/error-alert";
-import { getEventById } from "dummy-data";
-import { useRouter } from "next/router";
+import { eventType } from "@/types/firebaseTypes";
+import firebaseHelper from "helpers/api-util";
 
-export default function EventDetailPage() {
-  const router = useRouter();
-
-  const eventId = router.query.eventId;
-
-  let event = null;
-
-  if (typeof eventId === "string") {
-    event = getEventById(eventId);
-  }
+export default function EventDetailPage(props: { event: eventType }) {
+  let event = props.event;
 
   if (!event) {
     return (
-      <ErrorAlert>
-        <p>No event found!</p>
-      </ErrorAlert>
+      <div className="loading">
+        <p>Loading...</p>
+      </div>
     );
   }
 
@@ -33,4 +24,32 @@ export default function EventDetailPage() {
       </EventContent>
     </>
   );
+}
+
+export async function getStaticProps(context: { params: { eventId: string } }) {
+  const { getEventById } = await firebaseHelper();
+  const eventId = context.params.eventId;
+
+  const event = getEventById(eventId);
+
+  if (!event) return { notFound: true };
+
+  return {
+    props: {
+      event,
+    },
+    revalidate: 60,
+  };
+}
+
+export async function getStaticPaths() {
+  const { getFeaturedEvents } = await firebaseHelper();
+  const events = await getFeaturedEvents();
+
+  const paths = events.map((e: eventType) => ({ params: { eventId: e.id } }));
+
+  return {
+    paths,
+    fallback: true,
+  };
 }
