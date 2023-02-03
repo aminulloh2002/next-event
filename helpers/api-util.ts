@@ -36,6 +36,7 @@ export default async function firebaseHelper() {
     if (data) {
       return data.filter((event: eventType) => event.isFeatured);
     }
+    return [];
   }
 
   function getFilteredEvents(dateFilter: { year: number; month: number }) {
