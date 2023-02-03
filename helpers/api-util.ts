@@ -2,12 +2,30 @@ import { eventType } from "@/types/firebaseTypes";
 import axios from "axios";
 
 export default async function firebaseHelper() {
-  const data = await axios
+  type dataType = {
+    id: string;
+    date: string;
+    description: string;
+    image: string;
+    isFeatured: boolean;
+    location: string;
+    title: string;
+  }[];
+
+  const data: dataType = await axios
     .get(
       "https://next-practice-d9f57-default-rtdb.asia-southeast1.firebasedatabase.app/events.json"
     )
     .then((res) => {
-      return res.data;
+      const events = [];
+
+      for (const key in res.data) {
+        events.push({
+          id: key,
+          ...res.data[key],
+        });
+      }
+      return events;
     });
 
   function getAllEvents() {
@@ -47,4 +65,14 @@ export default async function firebaseHelper() {
     getEventById,
     getFilteredEvents,
   };
+}
+
+export async function insertIntoFirebase(payload: any) {
+  return await fetch(
+    "https://next-practice-d9f57-default-rtdb.asia-southeast1.firebasedatabase.app/events.json",
+    {
+      method: "POST",
+      body: JSON.stringify(payload),
+    }
+  );
 }
