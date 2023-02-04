@@ -3,6 +3,8 @@ import { useRouter } from "next/router";
 import { useRef, FormEvent, useState } from "react";
 import ErrorAlert from "../ui/error-alert";
 import classes from "./event-form.module.css";
+import { FaSpinner } from "react-icons/fa";
+
 export default function EventForm() {
   const [isValidationError, setIsValidationError] = useState(false);
   const titleRef = useRef<HTMLInputElement>(null);
@@ -11,9 +13,11 @@ export default function EventForm() {
   const descriptionRef = useRef<HTMLTextAreaElement>(null);
   const imageRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
 
   const submitHandler = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setIsLoading(true);
 
     const title = titleRef.current?.value;
     const date = dateRef.current?.value;
@@ -27,7 +31,6 @@ export default function EventForm() {
       location: string | undefined;
       description: string | undefined;
       image?: File | null | undefined;
-      isFeatured: boolean;
     }
 
     const payload: payloadInterface = {
@@ -35,7 +38,6 @@ export default function EventForm() {
       date,
       location,
       description,
-      isFeatured: false,
     };
 
     const isInvalid = Object.values(payload).find(
@@ -57,9 +59,15 @@ export default function EventForm() {
       formData.append(key, payload[key as keyof payloadInterface] as Blob);
     });
 
-    axios.post("/api/add-event", formData).then((res) => {
-      return router.replace("/events");
-    });
+    axios
+      .post("/api/add-event", formData)
+      .then((res) => {
+        return router.replace("/events");
+      })
+      .catch((err) => {
+        setIsLoading(false);
+        console.log(err);
+      });
   };
 
   return (
@@ -117,7 +125,13 @@ export default function EventForm() {
             </ErrorAlert>
           )}
 
-          <button type="submit">Save</button>
+          <button type="submit" disabled={isLoading}>
+            {isLoading ? (
+              <FaSpinner className={classes.iconSpin} />
+            ) : (
+              "Add Events"
+            )}
+          </button>
         </form>
       </div>
     </div>

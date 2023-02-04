@@ -21,9 +21,11 @@ export default function EventItem(props: { item: eventType }) {
 
   const exploreLink = `/events/${id}`;
 
+  const imgSrc = image.includes("https") ? image : `/${image}`;
+
   return (
     <li className={classes.item}>
-      <Image src={"/" + image} alt={title} width={375} height={240} />
+      <Image src={imgSrc} alt={title} width={375} height={240} />
       <div className={classes.content}>
         <div className={classes.summary}>
           <h2>{title}</h2>

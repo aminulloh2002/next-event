@@ -14,10 +14,12 @@ function EventLogistics(props: { item: eventType }) {
   });
   const addressText = address.replace(", ", "\n");
 
+  const imgSrc = image.includes("https") ? image : `/${image}`;
+
   return (
     <section className={classes.logistics}>
       <div className={classes.image}>
-        <Image src={`/${image}`} alt={imageAlt} height={300} width={300} />
+        <Image src={imgSrc} alt={imageAlt} height={300} width={300} />
       </div>
       <ul className={classes.list}>
         <LogisticsItem icon={HiOutlineCalendar}>
