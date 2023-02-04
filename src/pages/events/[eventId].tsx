@@ -38,7 +38,7 @@ export async function getStaticProps(context: { params: { eventId: string } }) {
     props: {
       event,
     },
-    revalidate: 60,
+    revalidate: 30,
   };
 }
 
